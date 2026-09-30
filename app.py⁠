@@ -1,0 +1,27 @@
+from flask import Flask, request, jsonify
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "ShortsMaker AI Backend is Running!"
+
+@app.route('/generate', methods=['POST'])
+def generate():
+    try:
+        data = request.json
+        video_url = data.get('url')
+        
+        if not video_url:
+            return jsonify({"status": "error", "message": "URL nahi mila!"}), 400
+            
+        return jsonify({
+            "status": "success", 
+            "message": "Video successfully received!",
+            "url": video_url
+        })
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+if __name__ == '__main__':
+    app.run(debug=True)
