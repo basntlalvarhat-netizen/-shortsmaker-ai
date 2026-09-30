@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ShortsMaker AI</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: #08080d;
+      color: white;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 600px;
+      padding: 45px 20px;
+      text-align: center;
+    }
+
+    .logo {
+      font-size: 32px;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .logo span {
+      color: #ff2d55;
+    }
+
+    h1 {
+      font-size: 38px;
+      line-height: 1.15;
+      margin-bottom: 15px;
+    }
+
+    .subtitle {
+      color: #a7a7b2;
+      font-size: 16px;
+      line-height: 1.5;
+      margin-bottom: 35px;
+    }
+
+    .box {
+      background: #111118;
+      border: 1px solid #292936;
+      border-radius: 20px;
+      padding: 22px;
+    }
+
+    input {
+      width: 100%;
+      padding: 17px;
+      border-radius: 12px;
+      border: 1px solid #333341;
+      background: #08080d;
+      color: white;
+      font-size: 15px;
+      outline: none;
+      margin-bottom: 14px;
+    }
+
+    input:focus {
+      border-color: #ff2d55;
+    }
+
+    button {
+      width: 100%;
+      padding: 17px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #ff2d55, #ff0055);
+      color: white;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    #message {
+      margin-top: 18px;
+      color: #b5b5c0;
+      font-size: 14px;
+      min-height: 20px;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 25px;
+    }
+
+    .feature {
+      background: #111118;
+      border: 1px solid #292936;
+      border-radius: 14px;
+      padding: 15px 8px;
+      font-size: 13px;
+      color: #c7c7d0;
+    }
+
+    .icon {
+      font-size: 22px;
+      margin-bottom: 7px;
+    }
+
+    footer {
+      margin-top: 35px;
+      color: #666674;
+      font-size: 12px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <div class="logo">⚡ <span>ShortsMaker</span> AI</div>
+
+    <h1>Turn Long Videos Into Shorts</h1>
+
+    <p class="subtitle">
+      Paste a YouTube video link and create engaging short-form videos with AI.
+    </p>
+
+    <div class="box">
+
+      <input
+        type="url"
+        id="youtubeUrl"
+        placeholder="Paste YouTube video link here..."
+      >
+
+      <button onclick="generateShorts()">
+        ✨ Generate Shorts
+      </button>
+
+      <div id="message"></div>
+
+    </div>
+
+    <div class="features">
+
+      <div class="feature">
+        <div class="icon">🎬</div>
+        AI Clips
+      </div>
+
+      <div class="feature">
+        <div class="icon">📱</div>
+        9:16 Shorts
+      </div>
+
+      <div class="feature">
+        <div class="icon">💬</div>
+        Captions
+      </div>
+
+    </div>
+
+    <footer>
+      © 2026 ShortsMaker AI
+    </footer>
+
+  </div>
+
+  <script>
+    function generateShorts() {
+
+      const url = document.getElementById("youtubeUrl").value.trim();
+      const message = document.getElementById("message");
+
+      if (!url) {
+        message.textContent = "⚠️ Please paste a YouTube video link.";
+        return;
+      }
+
+      if (!url.includes("youtube.com") && !url.includes("youtu.be")) {
+        message.textContent = "⚠️ Please enter a valid YouTube link.";
+        return;
+      }
+
+      message.textContent =
+        "⏳ Your video is ready for AI processing. Backend connection will be added next.";
+
+    }
+  </script>
+
+</body>
+</html>
