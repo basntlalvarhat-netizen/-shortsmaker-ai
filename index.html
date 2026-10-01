@@ -128,6 +128,29 @@
       color: #666674;
       font-size: 12px;
     }
+    .clip-list {
+      list-style: none;
+      padding: 0;
+      margin: 12px 0 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .clip-list a {
+      display: block;
+      padding: 10px 14px;
+      border: 1px solid #ff2d55;
+      border-radius: 10px;
+      color: white;
+      text-decoration: none;
+      word-break: break-word;
+    }
+
+    .clip-list a:hover,
+    .clip-list a:focus-visible {
+      background: #ff2d55;
+    }
   </style>
 </head>
 
@@ -185,6 +208,30 @@
   </div>
 
   <script>
+    function renderClips(container, data) {
+      container.textContent = "";
+
+      const summary = document.createElement("p");
+      summary.textContent = "✅ " + data.message;
+      container.appendChild(summary);
+
+      const list = document.createElement("ul");
+      list.className = "clip-list";
+
+      (data.clips || []).forEach(function (clip) {
+        const item = document.createElement("li");
+        const link = document.createElement("a");
+        link.href = clip.download_url;
+        link.setAttribute("download", "");
+        const sizeMb = (clip.size_bytes / (1024 * 1024)).toFixed(1);
+        link.textContent = "⬇ Short " + clip.index + " (" + clip.label + ", " + sizeMb + " MB)";
+        item.appendChild(link);
+        list.appendChild(item);
+      });
+
+      container.appendChild(list);
+    }
+
     async function generateShorts() {
 
       const url = document.getElementById("youtubeUrl").value.trim();
@@ -202,7 +249,7 @@
       }
 
       button.disabled = true;
-      message.textContent = "⏳ Sending your link to the backend...";
+      message.textContent = "⏳ Downloading and cutting your video into shorts. This can take a few minutes...";
 
       try {
         const response = await fetch("/api/generate", {
@@ -219,7 +266,7 @@
         }
 
         if (response.ok && data.status === "success") {
-          message.textContent = "✅ " + data.message + " (Video ID: " + data.video_id + ")";
+          renderClips(message, data);
         } else {
           message.textContent = "❌ " + (data.message || "Request failed with status " + response.status + ".");
         }
