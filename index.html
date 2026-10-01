@@ -86,6 +86,11 @@
       cursor: pointer;
     }
 
+    button:disabled {
+      opacity: 0.6;
+      cursor: wait;
+    }
+
     button:active {
       transform: scale(0.98);
     }
@@ -146,11 +151,11 @@
         placeholder="Paste YouTube video link here..."
       >
 
-      <button onclick="generateShorts()">
+      <button id="generateBtn" onclick="generateShorts()">
         ✨ Generate Shorts
       </button>
 
-      <div id="message"></div>
+      <div id="message" role="status" aria-live="polite"></div>
 
     </div>
 
@@ -180,10 +185,11 @@
   </div>
 
   <script>
-    function generateShorts() {
+    async function generateShorts() {
 
       const url = document.getElementById("youtubeUrl").value.trim();
       const message = document.getElementById("message");
+      const button = document.getElementById("generateBtn");
 
       if (!url) {
         message.textContent = "⚠️ Please paste a YouTube video link.";
@@ -195,10 +201,41 @@
         return;
       }
 
-      message.textContent =
-        "⏳ Your video is ready for AI processing. Backend connection will be added next.";
+      button.disabled = true;
+      message.textContent = "⏳ Sending your link to the backend...";
+
+      try {
+        const response = await fetch("/api/generate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url })
+        });
+
+        let data = {};
+        try {
+          data = await response.json();
+        } catch (parseError) {
+          data = {};
+        }
+
+        if (response.ok && data.status === "success") {
+          message.textContent = "✅ " + data.message + " (Video ID: " + data.video_id + ")";
+        } else {
+          message.textContent = "❌ " + (data.message || "Request failed with status " + response.status + ".");
+        }
+      } catch (networkError) {
+        message.textContent = "❌ Could not reach the backend. Please try again.";
+      } finally {
+        button.disabled = false;
+      }
 
     }
+
+    document.getElementById("youtubeUrl").addEventListener("keydown", function (event) {
+      if (event.key === "Enter" && !event.isComposing && event.keyCode !== 229) {
+        generateShorts();
+      }
+    });
   </script>
 
 </body>
